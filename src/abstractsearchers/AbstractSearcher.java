@@ -1,4 +1,4 @@
-package abstractsearcers;
+package abstractsearchers;
 
 import java.io.File;
 
