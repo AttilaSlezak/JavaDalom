@@ -14,7 +14,7 @@ import abstractsearchers.TitleSearcher;
 import abstractsearchers.YearSearcher;
 public class Menu {
     
-    public static List<AbstractSearcher> inputForConsol() {
+    public static List<AbstractSearcher> ID3ForConsol() {
         
        String input = null;
        String keyword = null;
@@ -40,12 +40,7 @@ public class Menu {
        menuElements.add("comment");
        menuElements.add("genre");
        
-       Scanner inputReader = new Scanner(System.in);
-       do {
-    	   System.out.println("Please write here the keyword for searching: ");
-           keyword = inputReader.nextLine();
-       } while (keyword.equals(""));
-       
+       Scanner inputReader = new Scanner(System.in);       
 
        for (int i = 0; i < listToSearch.size(); i++) {
             do{
@@ -65,4 +60,26 @@ public class Menu {
        inputReader.close();
        return listToSearch;
    }
+
+	public static String keyWordForConsol() {
+		String keyword;
+		Scanner inputReader = new Scanner(System.in);
+		   do {
+			   System.out.println("Please write here the keyword for searching: ");
+		       keyword = inputReader.nextLine();
+		   } while (keyword.toLowerCase().equals(""));
+		return keyword;
+	}
+	
+	public static boolean isSearch()
+	{
+		String question = null;
+		Scanner inputReader = new Scanner(System.in);
+		do {
+			   System.out.println("Woud you like to search anyting? (y / n): ");
+			   question = inputReader.nextLine();
+		   } while (question.toLowerCase().equals(""));
+		return question.toLowerCase().equals("Y");
+	}
+	
 }
