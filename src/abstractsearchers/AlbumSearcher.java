@@ -8,6 +8,6 @@ public class AlbumSearcher extends AbstractSearcher {
 
 	@Override
 	protected boolean isMatch(File mp3file, String keyword) {
-		return ID3Tag.id3tagFinder(mp3file).getAlbum() == keyword;
+		return ID3Tag.id3tagFinder(mp3file).getAlbum().contains(keyword);
 	}
 }
