@@ -9,6 +9,10 @@ public class DirectoryScanner {
 
 	static List<File> resultFiles = new ArrayList<File>();
 	
+	public static List<File> getResultFiles() {
+		return resultFiles;
+	}
+
 	public List<File> collect(File file) {
 		File[] files = file.listFiles(new MP3Filter());
 		
