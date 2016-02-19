@@ -48,12 +48,26 @@ public class ID3Tag {
 		String album = new String(readXBytes(bytes, 63, 93)).trim();
 		String year = new String(readXBytes(bytes, 93, 97)).trim();
 		String comment = new String(readXBytes(bytes, 97, 127)).trim();
-		Integer genre = ((int)(readXBytes(bytes, 127, 128)[0]) > 0) ? (int)(readXBytes(bytes, 127, 128)[0]) : (int)(readXBytes(bytes, 127, 128)[0]) + 256 ;
+		String genreTry = new String((readXBytes(bytes, 127, 128)));
+		Integer genre;
+		if (genreTry.length() > 0) {
+			byte b = readXBytes(bytes, 127, 128)[0];
+			//genre = ((int) b) + 256;
+			genre = ((int) b > 0) ? (int) b : (int) b + 256 ;
+		}
+		else {
+			genre = 148;
+		}
 		ID3Tag tag = new ID3Tag();
 		tag.setTitle(title);
 		tag.setArtist(artist);
 		tag.setAlbum(album);
-		tag.setYear(Integer.parseInt(year));
+		if (year.length() != 0) {
+			tag.setYear(Integer.parseInt(year));
+		}
+		else {
+			tag.setYear(0);
+		}
 		tag.setComment(comment);
 		tag.setGenre(genre);
 		return tag;
