@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.RandomAccessFile;
 
 public class ID3Tag {
+	
 	String title;
 	String artist;
 	String album;
@@ -11,45 +12,51 @@ public class ID3Tag {
 	String comment;
 	int genre;
 	
-	private ID3Tag() {
-		
+	private ID3Tag()
+	{
 	}
-
-	public static ID3Tag parse(byte[] bytes) {
+	
+	private static byte[] readXBytes(byte[] byteArray, int fromPos, int toPos)
+	{
+		byte[] result = new byte[toPos - fromPos];
+		for(int i = fromPos; i < toPos; i++ )
+		{
+			result[i - fromPos] = byteArray[i];
+		}
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		ID3Tag tag = (ID3Tag)obj;
+		return title.equals(tag.getTitle()) && artist.equals(tag.getArtist()) && album.equals(tag.getAlbum());
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return -1;
+	}
+	
+	public static ID3Tag parse(File file)
+	{
+		byte[] bytes = tail(file);
+		//ID3Tag tag = ID3Tag.parse(ide3Bytes);
 		String title = new String(readXBytes(bytes, 3, 33)).trim();
 		String artist = new String(readXBytes(bytes, 33, 63)).trim();
 		String album = new String(readXBytes(bytes, 63, 93)).trim();
-		int year;
-		try {
-			year = Integer.parseInt(new String(readXBytes(bytes, 93, 97)));
-		}
-		catch (java.lang.NumberFormatException e) {
-			year = 0;
-		}
-		String comment;
-		if (bytes[125] == 0) {
-			comment = new String(readXBytes(bytes, 97, 125)).trim();
-		}
-		else {
-			comment = new String(readXBytes(bytes, 97, 127)).trim();
-		}
-		int genre = bytes[127];
+		String year = new String(readXBytes(bytes, 93, 97)).trim();
+		String comment = new String(readXBytes(bytes, 97, 127)).trim();
+		Integer genre = ((int)(readXBytes(bytes, 127, 128)[0]) > 0) ? (int)(readXBytes(bytes, 127, 128)[0]) : (int)(readXBytes(bytes, 127, 128)[0]) + 256 ;
 		ID3Tag tag = new ID3Tag();
 		tag.setTitle(title);
 		tag.setArtist(artist);
 		tag.setAlbum(album);
-		tag.setYear(year);
+		tag.setYear(Integer.parseInt(year));
 		tag.setComment(comment);
 		tag.setGenre(genre);
 		return tag;
-	}
-	
-	private static byte[] readXBytes(byte[] byteArray, int fromPos, int toPos) {
-		byte[] result = new byte[toPos - fromPos];
-		for (int i = fromPos; i < toPos; i++) {
-			result[i - fromPos] = byteArray[i];
-		}
-		return result;
 	}
 	
 	public String getTitle() {
@@ -99,9 +106,10 @@ public class ID3Tag {
 	public void setGenre(int genre) {
 		this.genre = genre;
 	}
-
-	public static byte[] tail(File file) {
-		try
+	
+	public static byte[] tail(File file)
+    {
+        try
         {
             RandomAccessFile fileHandler = new RandomAccessFile(file, "r");
             long fileLength = fileHandler.length() - 1;
@@ -120,23 +128,18 @@ public class ID3Tag {
             e.printStackTrace();
         }
         return null;
-	}
+    }
 	
 	@Override
-	public String toString() {
+	public String toString() 
+	{
 		StringBuffer sb = new StringBuffer();
-		sb.append("Title: ").append(title).append('\n');
-		sb.append("Artist: ").append(artist).append('\n');
-		sb.append("Album: ").append(album).append('\n');
-		sb.append("Year: ").append(year).append('\n');
-		sb.append("Comment: ").append(comment).append('\n');
-		sb.append("Genre: ").append(genre).append('\n');
+		sb.append("Title:").append(title).append('\n');
+		sb.append("Artist:").append(artist).append('\n');
+		sb.append("Album:").append(album).append('\n');
+		sb.append("Year:").append(year).append('\n');
+		sb.append("Comment:").append(comment).append('\n');
+		sb.append("Genre:").append(genre).append('\n');
 		return sb.toString();
 	}
-
-	public static ID3Tag id3tagFinder(File path) {
-		byte[] id3Bytes = tail(new File(path.getAbsolutePath()));
-		ID3Tag tag = ID3Tag.parse(id3Bytes);
-		return tag;
-	}	
 }

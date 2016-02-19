@@ -8,7 +8,7 @@ public class GenreSearcher extends AbstractSearcher {
 
 	@Override
 	protected boolean isMatch(File mp3file, String keyword) {
-		Integer genreNum = ID3Tag.id3tagFinder(mp3file).getGenre();
+		Integer genreNum = ID3Tag.parse(mp3file).getGenre();
 		if (keyword.equals(Integer.toString(genreNum))) {
 			return true;
 		}

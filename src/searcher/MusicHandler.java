@@ -3,17 +3,28 @@ package searcher;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import abstractsearchers.AbstractSearcher;
 import file.DirectoryScanner;
 
 public class MusicHandler {
 	
 	public static void main(String[] args) {
+		List<File> resultFiles = DirectoryScanner.getResultFiles();
+		resultFiles = resultSearch();
+		printAllFilesToConsol(resultFiles);
+		System.out.println("");
+		System.out.println("count: " + resultFiles.size());
+	}
+	
+	public static List<File> resultSearch() {
 		List<AbstractSearcher> searchers = new ArrayList<AbstractSearcher>();
 		String keyword;
+		
+		File filePath = new File("C:\\testfiles");
+		DirectoryScanner ds = new DirectoryScanner();
+		ds.collect(filePath);
 		List<File> getFiles = DirectoryScanner.getResultFiles();
-		List<File> resultFiles = DirectoryScanner.getResultFiles();
+		List<File> resultFiles = getFiles;
 		
 		if (Menu.isSearch())
 		{
@@ -21,17 +32,14 @@ public class MusicHandler {
 			searchers = Menu.ID3ForConsol();
 		}else
 		{
-			printAllFilesToConsol(getFiles);
-			return;
+			return resultFiles;
 		}
 		
 		MyFileSearcher myfiles;
 		myfiles = buildChain(searchers);
-		myfiles.search(keyword, getFiles);
+		resultFiles = myfiles.search(keyword, getFiles);
 		
-		printAllFilesToConsol(resultFiles);
-		System.out.println("");
-		System.out.println(resultFiles.size() + " files");
+		return resultFiles;
 	}
 
 	public static MyFileSearcher buildChain(List<AbstractSearcher> searchers) {

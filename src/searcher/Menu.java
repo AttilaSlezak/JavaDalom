@@ -12,12 +12,12 @@ import abstractsearchers.FileNameSearcher;
 import abstractsearchers.GenreSearcher;
 import abstractsearchers.TitleSearcher;
 import abstractsearchers.YearSearcher;
+import mp3.GenreTypes;
 public class Menu {
     
     public static List<AbstractSearcher> ID3ForConsol() {
         
        String input = null;
-       String keyword = null;
        final String yesAnswer = "y";
        final String noAnswer = "n";
        List<AbstractSearcher> listToSearch = new ArrayList<AbstractSearcher>();
@@ -48,6 +48,7 @@ public class Menu {
                 input = inputReader.nextLine().toLowerCase();
                 if(input.equals(noAnswer)){
                     listToSearch.remove(i);
+                    menuElements.remove(i);
                     i--;
                 }
                 else if(input.equals(yesAnswer)){
@@ -57,16 +58,16 @@ public class Menu {
                 }
             }while(!( input.equals(yesAnswer) ||  input.equals(noAnswer)));
        }
-       inputReader.close();
        return listToSearch;
    }
 
 	public static String keyWordForConsol() {
-		String keyword;
-		Scanner inputReader = new Scanner(System.in);
-		   do {
+		String keyword = null;
+ 		listGenreTypes();	
+ 		Scanner inputReader = new Scanner(System.in);
+		do {
 			   System.out.println("Please write here the keyword for searching: ");
-		       keyword = inputReader.nextLine();
+			   keyword = inputReader.nextLine();
 		   } while (keyword.toLowerCase().equals(""));
 		return keyword;
 	}
@@ -76,10 +77,28 @@ public class Menu {
 		String question = null;
 		Scanner inputReader = new Scanner(System.in);
 		do {
-			   System.out.println("Woud you like to search anyting? (y / n): ");
+			   System.out.println("Would you like to search any keyword or tag? (y / n): ");
 			   question = inputReader.nextLine();
 		   } while (question.toLowerCase().equals(""));
-		return question.toLowerCase().equals("Y");
+		return question.toLowerCase().equals("y");
+	}
+	
+	public static void listGenreTypes()
+	{
+		String question = null;
+		Scanner inputReader = new Scanner(System.in);
+		do {
+			   System.out.println("Would you like to list the genre types? (Y / N): ");
+			   question = inputReader.nextLine();
+		   } while (question.toLowerCase().equals(""));
+		if(question.equals("y"))
+		{
+			for (Object key : GenreTypes.genreMap.keySet()) {
+				System.out.println(key.toString() + " : " + GenreTypes.genreMap.get(key));
+			}
+			return;
+		}
+		return;
 	}
 	
 }
