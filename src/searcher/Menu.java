@@ -68,8 +68,8 @@ public class Menu {
 		do {
 			   System.out.println("Please write here the keyword for searching: ");
 			   keyword = inputReader.nextLine();
-		   } while (keyword.toLowerCase().equals(""));
-		return keyword;
+		   } while (keyword.equals(""));
+		return keyword.toLowerCase();
 	}
 	
 	public static boolean isSearch()
@@ -77,10 +77,13 @@ public class Menu {
 		String question = null;
 		Scanner inputReader = new Scanner(System.in);
 		do {
-			   System.out.println("Would you like to search any keyword or tag? (y / n): ");
-			   question = inputReader.nextLine();
-		   } while (question.toLowerCase().equals(""));
-		return question.toLowerCase().equals("y");
+			   	if (question != null) {
+			   		System.out.println("Wrong answer. Please press Y to 'yes'or N to 'no'!");
+			   	}
+				System.out.println("Would you like to search any keyword or tag? (Y / N): ");
+				question = inputReader.nextLine();
+		   } while (!question.toLowerCase().equals("y") && !question.toLowerCase().equals("n"));
+		return question.toLowerCase().equals("y") ? true : false;
 	}
 	
 	public static void listGenreTypes()
