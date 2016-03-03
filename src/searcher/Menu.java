@@ -12,7 +12,7 @@ import abstractsearchers.FileNameSearcher;
 import abstractsearchers.GenreSearcher;
 import abstractsearchers.TitleSearcher;
 import abstractsearchers.YearSearcher;
-import mp3.GenreTypes;
+import mp3.GenreMapper;
 public class Menu {
     
     public static List<AbstractSearcher> ID3ForConsol() {
@@ -93,8 +93,8 @@ public class Menu {
 		   } while (question.toLowerCase().equals(""));
 		if(question.equals("y"))
 		{
-			for (Object key : GenreTypes.genreMap.keySet()) {
-				System.out.println(key.toString() + " : " + GenreTypes.genreMap.get(key));
+			for (Object key : GenreMapper.types.keySet()) {
+				System.out.println(key.toString() + " : " + GenreMapper.types.get(key));
 			}
 			return;
 		}

@@ -52,7 +52,6 @@ public class ID3Tag {
 		Integer genre;
 		if (genreTry.length() > 0) {
 			byte b = readXBytes(bytes, 127, 128)[0];
-			//genre = ((int) b) + 256;
 			genre = ((int) b > 0) ? (int) b : (int) b + 256 ;
 		}
 		else {
