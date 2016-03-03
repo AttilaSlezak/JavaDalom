@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import mp3.ID3Tag;
+import mp3.Properties;
 
 
 public class SearchServer{
