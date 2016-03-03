@@ -1,15 +1,17 @@
 package abstractsearchers;
 
 import java.io.File;
+import java.util.List;
+
 import static mp3.GenreTypes.genreMap;
 import mp3.ID3Tag;
 
 public class GenreSearcher extends AbstractSearcher {
 
 	@Override
-	protected boolean isMatch(File mp3file, String keyword) {
+	protected boolean isMatch(File mp3file, List<ID3Tag> tagList, String keyword) {
 		try {
-		Integer genreNum = ID3Tag.parse(mp3file).getGenre();
+		Integer genreNum = tagList.get(5).getGenre();
 		if (keyword.equals(Integer.toString(genreNum))) {
 			return true;
 		}
