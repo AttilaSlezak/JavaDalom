@@ -1,6 +1,6 @@
 package mp3;
 
-public enum Properties {
+public enum Property {
 	FILENAME,
 	TITLE,
 	ARTIST,

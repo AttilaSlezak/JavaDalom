@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import mp3.ID3Tag;
-import mp3.Properties;
+import mp3.Property;
 
 
 public class SearchServer{
@@ -24,7 +24,7 @@ public class SearchServer{
 		
 		Map<File, ID3Tag> filesAndTagsFromUser;
 		String keywordFromUser;
-		List<Properties> propertiesFromUser;
+		List<Property> propertiesFromUser;
 		
 		try
 		{
