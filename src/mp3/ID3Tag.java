@@ -42,7 +42,6 @@ public class ID3Tag {
 	public static ID3Tag parse(File file)
 	{
 		byte[] bytes = tail(file);
-		//ID3Tag tag = ID3Tag.parse(ide3Bytes);
 		String title = new String(readXBytes(bytes, 3, 33)).trim();
 		String artist = new String(readXBytes(bytes, 33, 63)).trim();
 		String album = new String(readXBytes(bytes, 63, 93)).trim();
