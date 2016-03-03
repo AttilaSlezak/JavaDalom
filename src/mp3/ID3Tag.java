@@ -2,15 +2,20 @@ package mp3;
 
 import java.io.File;
 import java.io.RandomAccessFile;
+import java.io.Serializable;
 
-public class ID3Tag {
+public class ID3Tag implements Serializable {
 	
-	String title;
-	String artist;
-	String album;
-	int year;
-	String comment;
-	int genre;
+	/**
+     * 
+     */
+    private static final long serialVersionUID = -5233207519609692173L;
+	private String title;
+	private String artist;
+	private String album;
+	private int year;
+	private String comment;
+	private int genre;
 	
 	private ID3Tag()
 	{
@@ -24,19 +29,6 @@ public class ID3Tag {
 			result[i - fromPos] = byteArray[i];
 		}
 		return result;
-	}
-	
-	@Override
-	public boolean equals(Object obj)
-	{
-		ID3Tag tag = (ID3Tag)obj;
-		return title.equals(tag.getTitle()) && artist.equals(tag.getArtist()) && album.equals(tag.getAlbum());
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		return -1;
 	}
 	
 	public static ID3Tag parse(File file)
@@ -141,6 +133,24 @@ public class ID3Tag {
         }
         return null;
     }
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		ID3Tag tag = (ID3Tag)obj;
+		return ((title == null && tag.getTitle() == null) || title.equals(tag.getTitle()))
+				&& ((artist == null && tag.getArtist() == null) || artist.equals(tag.getArtist()))
+				&& ((album == null && tag.getAlbum() == null) || album.equals(tag.getAlbum())) 
+				&& (year == tag.getYear()) 
+				&& ((comment == null && tag.getComment() == null) || comment.equals(tag.getComment()))
+				&& (genre == tag.getGenre());
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return -1;
+	}
 	
 	@Override
 	public String toString() 
