@@ -121,7 +121,7 @@ public class SearchServer {
 
 	public List<File> generateSearchResult(Map<File, ID3Tag> filesAndTagsFromUser, String keyword,
 			List<Property> properties) {
-		List<File> resultFiles = null;
+		List<File> resultFiles = new ArrayList<>();
 		List<AbstractSearcher> searchers = new ArrayList<AbstractSearcher>();
 
 		System.out.println("Itt van");
@@ -148,8 +148,8 @@ public class SearchServer {
 		}else{
 			for (File f : filesAndTagsFromUser.keySet()) {
 				resultFiles.add(f);
-			return resultFiles;
 			}
+			return resultFiles;
 		}
 		AbstractSearcher searchChain = searchers.get(0);
 
