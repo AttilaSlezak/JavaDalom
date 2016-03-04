@@ -9,6 +9,6 @@ public class FileNameSearcher extends AbstractSearcher {
 	@Override
 	protected boolean isMatch(File mp3file, ID3Tag tagList, String keyword) {
 		String fileName = mp3file.getName().toString().toLowerCase();
-		return fileName.contains(keyword);
+		return fileName.contains(keyword.toLowerCase());
 	}
 }

@@ -15,7 +15,7 @@ public class GenreSearcher extends AbstractSearcher {
 			if (keyword.equals(Integer.toString(genreNum))) {
 				return true;
 			}
-			return types.get(genreNum).toLowerCase().contains(keyword);
+			return types.get(genreNum).toLowerCase().contains(keyword.toLowerCase());
 		} catch (Exception e) {
 			return false;
 		}

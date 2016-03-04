@@ -51,7 +51,9 @@ public class SearchServer {
 			boolean haveList = false;
 
 			while (true) {
-				if (ois.read() > -1) {
+				int i;
+				if ((i = ois.read()) > -1) {
+				if (i == 1) {break;}
 					Object obj = ois.readObject();
 
 					if (obj instanceof Map<?, ?>) {
@@ -87,9 +89,10 @@ public class SearchServer {
 							oos.writeObject(errorMessage);
 						}
 					}
-					if (haveMap && haveList && haveMap) {
+					if (haveString && haveList && haveMap) {
 						List<File> result;
 						result = generateSearchResult(filesAndTagsFromUser, keywordFromUser, propertiesFromUser);
+						System.out.println("Itt jön a visszaadás");
 						oos.writeObject(result);
 
 						haveList = false;
@@ -97,14 +100,14 @@ public class SearchServer {
 						haveMap = false;
 						// break;
 					}
-					oos.close();
-					os.close();
-					s.close();
-					ois.close();
-					is.close();
 				}
-				ss.close();
 			}
+			oos.close();
+			os.close();
+			s.close();
+			ois.close();
+			is.close();
+			ss.close();
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
@@ -120,7 +123,9 @@ public class SearchServer {
 		List<File> resultFiles;
 		List<AbstractSearcher> searchers = new ArrayList<AbstractSearcher>();
 
+		System.out.println("Itt van");
 		for (Property p : properties) {
+			System.out.println(p);
 			switch (p) {
 			case FILENAME:
 				searchers.add(new FileNameSearcher());

@@ -8,6 +8,6 @@ public class TitleSearcher extends AbstractSearcher {
 
 	@Override
 	protected boolean isMatch(File mp3file, ID3Tag tagList, String keyword) {
-		return tagList.getTitle().toLowerCase().contains(keyword);
+		return tagList.getTitle().toLowerCase().contains(keyword.toLowerCase());
 	}
 }

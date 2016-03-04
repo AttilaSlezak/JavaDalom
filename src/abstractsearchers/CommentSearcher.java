@@ -8,6 +8,6 @@ public class CommentSearcher extends AbstractSearcher {
 
 	@Override
 	protected boolean isMatch(File mp3file, ID3Tag tagList, String keyword) {
-		return tagList.getComment().toLowerCase().contains(keyword);
+		return tagList.getComment().toLowerCase().contains(keyword.toLowerCase());
 	}
 }
