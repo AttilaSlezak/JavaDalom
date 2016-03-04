@@ -1,7 +1,6 @@
 package abstractsearchers;
 
 import java.io.File;
-import java.util.List;
 
 import common.ID3Tag;
 
