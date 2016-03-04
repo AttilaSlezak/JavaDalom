@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import abstractsearchers.AbstractSearcher;
 import abstractsearchers.AlbumSearcher;
@@ -120,27 +121,34 @@ public class SearchServer {
 
 	public List<File> generateSearchResult(Map<File, ID3Tag> filesAndTagsFromUser, String keyword,
 			List<Property> properties) {
-		List<File> resultFiles;
+		List<File> resultFiles = null;
 		List<AbstractSearcher> searchers = new ArrayList<AbstractSearcher>();
 
 		System.out.println("Itt van");
-		for (Property p : properties) {
-			System.out.println(p);
-			switch (p) {
-			case FILENAME:
-				searchers.add(new FileNameSearcher());
-			case TITLE:
-				searchers.add(new TitleSearcher());
-			case ARTIST:
-				searchers.add(new ArtistSearcher());
-			case ALBUM:
-				searchers.add(new AlbumSearcher());
-			case YEAR:
-				searchers.add(new YearSearcher());
-			case COMMENT:
-				searchers.add(new CommentSearcher());
-			case GENRE:
-				searchers.add(new GenreSearcher());
+		if (!(properties.isEmpty())) {
+			for (Property p : properties) {
+				System.out.println(p);
+				switch (p) {
+				case FILENAME:
+					searchers.add(new FileNameSearcher());
+				case TITLE:
+					searchers.add(new TitleSearcher());
+				case ARTIST:
+					searchers.add(new ArtistSearcher());
+				case ALBUM:
+					searchers.add(new AlbumSearcher());
+				case YEAR:
+					searchers.add(new YearSearcher());
+				case COMMENT:
+					searchers.add(new CommentSearcher());
+				case GENRE:
+					searchers.add(new GenreSearcher());
+				}
+		}
+		}else{
+			for (File f : filesAndTagsFromUser.keySet()) {
+				resultFiles.add(f);
+			return resultFiles;
 			}
 		}
 		AbstractSearcher searchChain = searchers.get(0);
@@ -152,7 +160,7 @@ public class SearchServer {
 		MyFileSearcher myfiles = new MyFileSearcher(searchChain);
 
 		resultFiles = myfiles.search(keyword, filesAndTagsFromUser);
-
+		
 		return resultFiles;
 	}
 
