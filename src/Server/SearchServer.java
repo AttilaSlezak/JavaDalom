@@ -93,8 +93,9 @@ public class SearchServer {
 					if (haveString && haveList && haveMap) {
 						List<File> result;
 						result = generateSearchResult(filesAndTagsFromUser, keywordFromUser, propertiesFromUser);
-						System.out.println("Itt jön a visszaadás");
+						System.out.println("Files sending!");
 						oos.writeObject(result);
+						System.out.println("Files send succesfull!");
 
 						haveList = false;
 						haveString = false;
@@ -124,10 +125,8 @@ public class SearchServer {
 		List<File> resultFiles = new ArrayList<>();
 		List<AbstractSearcher> searchers = new ArrayList<AbstractSearcher>();
 
-		System.out.println("Itt van");
 		if (!(properties.isEmpty())) {
 			for (Property p : properties) {
-				System.out.println(p);
 				switch (p) {
 				case FILENAME:
 					searchers.add(new FileNameSearcher());
