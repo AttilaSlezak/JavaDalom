@@ -37,7 +37,8 @@ public class ID3Tag implements Serializable {
 		String title = new String(readXBytes(bytes, 3, 33)).trim();
 		String artist = new String(readXBytes(bytes, 33, 63)).trim();
 		String album = new String(readXBytes(bytes, 63, 93)).trim();
-		String year = new String(readXBytes(bytes, 93, 97)).trim();
+		String strYear = new String(readXBytes(bytes, 93, 97)).trim();
+		int year = strYear.length() != 0 ? Integer.parseInt(strYear) : 0;
 		String comment = new String(readXBytes(bytes, 97, 127)).trim();
 		String genreTry = new String((readXBytes(bytes, 127, 128)));
 		Integer genre;
@@ -46,22 +47,41 @@ public class ID3Tag implements Serializable {
 			genre = ((int) b > 0) ? (int) b : (int) b + 256 ;
 		}
 		else {
-			genre = 148;
+			genre = 12;
 		}
+		if (genre > 191) {genre = 12;}
 		ID3Tag tag = new ID3Tag();
 		tag.setTitle(title);
 		tag.setArtist(artist);
 		tag.setAlbum(album);
-		if (year.length() != 0) {
-			tag.setYear(Integer.parseInt(year));
-		}
-		else {
-			tag.setYear(0);
-		}
+		tag.setYear(year);
 		tag.setComment(comment);
 		tag.setGenre(genre);
 		return tag;
 	}
+	
+	public static byte[] tail(File file)
+    {
+        try
+        {
+            RandomAccessFile fileHandler = new RandomAccessFile(file, "r");
+            long fileLength = fileHandler.length() - 1;
+            byte[] buffer = new byte[128];
+
+            for (int i = 0; i < buffer.length; i++)
+            {
+                fileHandler.seek(fileLength - 127 + i);
+                buffer[i] = fileHandler.readByte();
+            }
+            fileHandler.close();
+            return buffer;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
 	
 	public String getTitle() {
 		return title;
@@ -111,29 +131,6 @@ public class ID3Tag implements Serializable {
 		this.genre = genre;
 	}
 	
-	public static byte[] tail(File file)
-    {
-        try
-        {
-            RandomAccessFile fileHandler = new RandomAccessFile(file, "r");
-            long fileLength = fileHandler.length() - 1;
-            byte[] buffer = new byte[128];
-
-            for (int i = 0; i < buffer.length; i++)
-            {
-                fileHandler.seek(fileLength - 127 + i);
-                buffer[i] = fileHandler.readByte();
-            }
-            fileHandler.close();
-            return buffer;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-	
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -153,15 +150,16 @@ public class ID3Tag implements Serializable {
 	}
 	
 	@Override
-	public String toString() 
-	{
-		StringBuffer sb = new StringBuffer();
-		sb.append("Title:").append(title).append('\n');
-		sb.append("Artist:").append(artist).append('\n');
-		sb.append("Album:").append(album).append('\n');
-		sb.append("Year:").append(year).append('\n');
-		sb.append("Comment:").append(comment).append('\n');
-		sb.append("Genre:").append(genre).append('\n');
-		return sb.toString();
-	}
+	public String toString() {
+		StringBuffer mp3Tag = new StringBuffer();
+		mp3Tag.append("Artist: ").append((artist == null ? "NULL" : artist)).append("\n");
+		mp3Tag.append("Title: ").append((title == null ? "NULL" : title)).append("\n");
+		mp3Tag.append("Album: ").append((album == null ? "NULL" : album)).append("\n");
+		mp3Tag.append("Year: ").append((year == 0 ? "NULL" : year)).append("\n");
+		mp3Tag.append("Comment: ").append((comment == null ? "NULL" : comment)).append("\n");
+		mp3Tag.append("Genre: ").append((genre == 0 ? "NULL" : genre)).append("\n");
+
+		return mp3Tag.toString();
+	    }
+	 
 }
