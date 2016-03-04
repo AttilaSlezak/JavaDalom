@@ -12,7 +12,7 @@ import abstractsearchers.FileNameSearcher;
 import abstractsearchers.GenreSearcher;
 import abstractsearchers.TitleSearcher;
 import abstractsearchers.YearSearcher;
-import mp3.GenreMapper;
+import common.GenreMapper;
 public class Menu {
     
     public static List<AbstractSearcher> ID3ForConsol() {

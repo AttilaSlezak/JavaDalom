@@ -3,14 +3,14 @@ package abstractsearchers;
 import java.io.File;
 import java.util.List;
 
-import mp3.ID3Tag;
+import common.ID3Tag;
 
 public class CommentSearcher extends AbstractSearcher {
 
 	@Override
-	protected boolean isMatch(File mp3file, List<ID3Tag> tagList, String keyword) {
+	protected boolean isMatch(File mp3file, ID3Tag tagList, String keyword) {
 
-		return tagList.get(4).getComment().toLowerCase().contains(keyword);
+		return tagList.getComment().toLowerCase().contains(keyword);
 	}
 
 }

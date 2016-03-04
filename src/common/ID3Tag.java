@@ -1,4 +1,4 @@
-package mp3;
+package common;
 
 import java.io.File;
 import java.io.RandomAccessFile;

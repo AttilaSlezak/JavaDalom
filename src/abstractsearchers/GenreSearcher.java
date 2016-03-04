@@ -3,19 +3,20 @@ package abstractsearchers;
 import java.io.File;
 import java.util.List;
 
-import static mp3.GenreTypes.genreMap;
-import mp3.ID3Tag;
+import common.ID3Tag;
+
+import static common.GenreMapper.types;
 
 public class GenreSearcher extends AbstractSearcher {
 
 	@Override
-	protected boolean isMatch(File mp3file, List<ID3Tag> tagList, String keyword) {
+	protected boolean isMatch(File mp3file, ID3Tag tagList, String keyword) {
 		try {
-		Integer genreNum = tagList.get(5).getGenre();
+		Integer genreNum = tagList.getGenre();
 		if (keyword.equals(Integer.toString(genreNum))) {
 			return true;
 		}
-		return genreMap.get(genreNum).toLowerCase().contains(keyword);
+		return types.get(genreNum).toLowerCase().contains(keyword);
 		}
 		catch (Exception e) {
 			return false;

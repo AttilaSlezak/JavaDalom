@@ -3,7 +3,7 @@ package abstractsearchers;
 import java.io.File;
 import java.util.List;
 
-import mp3.ID3Tag;
+import common.ID3Tag;
 
 public abstract class AbstractSearcher {
 
@@ -13,7 +13,7 @@ public abstract class AbstractSearcher {
 		this.nextSearcher = nextSearcher;
 	}
 
-	public boolean isInResults(File mp3file, List<ID3Tag> tagList, String keyword) {
+	public boolean isInResults(File mp3file, ID3Tag tagList, String keyword) {
 		if (isMatch(mp3file, tagList, keyword)) {
 			return true;
 		}
@@ -24,5 +24,5 @@ public abstract class AbstractSearcher {
 		}
 	}
 
-	protected abstract boolean isMatch(File mp3file, List<ID3Tag> tagList, String keyword);
+	protected abstract boolean isMatch(File mp3file, ID3Tag tagList, String keyword);
 }

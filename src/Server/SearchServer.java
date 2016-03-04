@@ -7,64 +7,158 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import mp3.ID3Tag;
-import mp3.Property;
+import abstractsearchers.AbstractSearcher;
+import abstractsearchers.AlbumSearcher;
+import abstractsearchers.ArtistSearcher;
+import abstractsearchers.CommentSearcher;
+import abstractsearchers.FileNameSearcher;
+import abstractsearchers.GenreSearcher;
+import abstractsearchers.TitleSearcher;
+import abstractsearchers.YearSearcher;
+import common.ID3Tag;
+import common.Property;
+import file.DirectoryScanner;
+import searcher.Menu;
+import searcher.MyFileSearcher;
 
 
 public class SearchServer{
 
-	public int port;
+	private int port;
+	private String errorMessage= "";
 	
 	public SearchServer(int port)
 	{
 		this.port = port;
 		
-		Map<File, ID3Tag> filesAndTagsFromUser;
-		String keywordFromUser;
-		List<Property> propertiesFromUser;
+		Map<File, ID3Tag> filesAndTagsFromUser = null;
+		String keywordFromUser = null;
+		List<Property> propertiesFromUser = null;
+		ServerSocket ss = null;
 		
 		try
 		{
-			ServerSocket ss = new ServerSocket(port);
+			ss = new ServerSocket(port);
 			Socket s = ss.accept();
 			
 			InputStream is = s.getInputStream();
-			ObjectInputStream ois = new ObjectInputStream(is);
-
 			OutputStream os = s.getOutputStream();
+
+			ObjectInputStream ois = new ObjectInputStream(is);
 			ObjectOutputStream oos = new ObjectOutputStream(os);
+			
+			boolean haveMap = false;
+			boolean haveString = false;
+			boolean haveList = false;
+			
 			
 			while(true){
 				if (ois.read() > -1) {
 					Object obj = ois.readObject();
 					
 					if (obj instanceof Map<?, ?>) {
-						filesAndTagsFromUser = (Map<File, ID3Tag>)obj;
-						System.out.println("Files and Tags OK");
+						try {
+							filesAndTagsFromUser = (Map<File, ID3Tag>)obj;
+							haveMap = true;
+							System.out.println("Files and Tags OK");
+						} catch(Exception e) {
+							
+							errorMessage = "Wrong files and ID3 tags!";
+							oos.writeObject(errorMessage);
+							haveMap = false;
+						}
 					}
 					if (obj instanceof String) {
-						keywordFromUser = (String)obj;
-						System.out.println("Keyword OK");
+						try {
+							keywordFromUser = (String)obj;
+							haveString = true;
+							System.out.println("Keyword OK");
+						} catch (Exception e) {
+							errorMessage = "Wrong keyword!";
+							oos.writeObject(errorMessage);
+							haveString = false;
+						}
 					}
 					if (obj instanceof List<?>) {
+						try {
+							propertiesFromUser = (List<Property>)obj;
+							haveList = true;
+							System.out.println("Properties OK");
+						} catch (Exception e) {
+							errorMessage = "Wrong properties!";
+							oos.writeObject(errorMessage);
+						}
+					}
+					if (haveMap && haveList && haveMap) {
+						List<File> result;
+						result = generateSearchResult(filesAndTagsFromUser, keywordFromUser, propertiesFromUser);
+						oos.writeObject(result);
 						
-						System.out.println("Properties OK");
-				}
+						haveList = false;
+						haveString = false;
+						haveMap = false;
+						//break;
+					}
 					oos.close();
 					os.close();
 					s.close();
+					ois.close();
+					is.close();
 				}
+				ss.close();
 			}
-//		ss.close();
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			System.out.println(e);
 		}
+		finally {
+//			if(! ss.isClosed())
+//			{
+//				ss.close();
+//			}
+		}
 	}
+	
+	public List<File> generateSearchResult(Map<File, ID3Tag> filesAndTagsFromUser, String keyword, List<Property> properties)
+	{
+		List<File> resultFiles;
+		List<AbstractSearcher> searchers = new ArrayList<AbstractSearcher>();
+		
+		for (Property p : properties) {
+			switch (p) {
+				case FILENAME:
+					searchers.add(new FileNameSearcher());
+				case TITLE: 
+					searchers.add(new TitleSearcher());
+				case ARTIST: 
+					searchers.add(new ArtistSearcher());
+				case ALBUM:
+					searchers.add(new AlbumSearcher());
+				case YEAR:
+					searchers.add(new YearSearcher());
+				case COMMENT:
+					searchers.add(new CommentSearcher());
+				case GENRE:
+					searchers.add(new GenreSearcher());
+			}
+		}			
+			AbstractSearcher searchChain = searchers.get(0);
+			
+			for (int i = 0; i < searchers.size()-1; i++) {
+				searchers.get(i).setNextSearcher(searchers.get(i+1));
+			}
+			
+			MyFileSearcher myfiles = new MyFileSearcher(searchChain);
+			
+			resultFiles = myfiles.search(keyword, filesAndTagsFromUser);
+			
+			return resultFiles;
+	}
+	
 	
 	public static void main(String[] args)
 	{
